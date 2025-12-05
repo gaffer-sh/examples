@@ -65,7 +65,7 @@ jobs:
       # Store artifacts for parser development
       - name: Upload test artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: vitest-reports-${{ github.sha }}
           path: vitest-example/reports/

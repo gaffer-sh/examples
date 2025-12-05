@@ -1,0 +1,14 @@
+{
+  "name": "gaffer-vitest-example",
+  "version": "1.0.0",
+  "description": "Gaffer Vitest example with JSON reporting",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:json": "vitest run --reporter=json --outputFile=reports/vitest-results.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

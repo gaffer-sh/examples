@@ -1,0 +1,81 @@
+name: pytest Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pytest-example/**"
+      - ".github/workflows/pytest.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "pytest-example/**"
+      - ".github/workflows/pytest.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: pytest-example
+
+jobs:
+  test:
+    name: pytest HTML Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: pytest-example/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run tests with HTML output
+        run: pytest --html=reports/pytest-report.html --self-contained-html
+        continue-on-error: true
+
+      # Upload via GitHub Action (recommended)
+      - name: Upload pytest HTML to Gaffer
+        if: always() && env.GAFFER_API_KEY != ''
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: pytest-example/reports/pytest-report.html
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: pytest
+          test_suite: pytest-html
+        env:
+          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+
+      # Alternative: Upload via curl (for documentation/reference)
+      - name: Upload via curl (example)
+        if: always() && env.GAFFER_API_KEY != ''
+        continue-on-error: true
+        env:
+          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+        run: |
+          curl -X POST https://app.gaffer.sh/api/upload \
+            -H "X-API-Key: $GAFFER_API_KEY" \
+            -F "files=@reports/pytest-report.html" \
+            -F "commit_sha=${{ github.sha }}" \
+            -F "branch=${{ github.ref_name }}" \
+            -F "test_framework=pytest" \
+            -F "test_suite=curl-example"
+
+      # Store artifacts for parser development
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-reports-${{ github.sha }}
+          path: pytest-example/reports/
+          retention-days: 30

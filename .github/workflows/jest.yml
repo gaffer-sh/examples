@@ -1,0 +1,98 @@
+name: Jest Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "jest-example/**"
+      - ".github/workflows/jest.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "jest-example/**"
+      - ".github/workflows/jest.yml"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: jest-example
+
+jobs:
+  test:
+    name: Jest JSON & HTML Reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+          cache-dependency-path: jest-example/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run tests with JSON output
+        run: npm run test:json
+        continue-on-error: true
+
+      - name: Run tests with HTML output
+        run: npm run test:html
+        continue-on-error: true
+
+      # Upload via GitHub Action (recommended)
+      - name: Upload Jest JSON to Gaffer
+        if: always() && env.GAFFER_API_KEY != ''
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: jest-example/reports/jest-results.json
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: jest
+          test_suite: jest-json
+        env:
+          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+
+      - name: Upload Jest HTML to Gaffer
+        if: always() && env.GAFFER_API_KEY != ''
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: jest-example/reports/jest-report.html
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: jest
+          test_suite: jest-html
+        env:
+          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+
+      # Alternative: Upload via curl (for documentation/reference)
+      - name: Upload via curl (example)
+        if: always() && env.GAFFER_API_KEY != ''
+        continue-on-error: true
+        env:
+          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+        run: |
+          curl -X POST https://app.gaffer.sh/api/upload \
+            -H "X-API-Key: $GAFFER_API_KEY" \
+            -F "files=@reports/jest-results.json" \
+            -F "commit_sha=${{ github.sha }}" \
+            -F "branch=${{ github.ref_name }}" \
+            -F "test_framework=jest" \
+            -F "test_suite=curl-example"
+
+      # Store artifacts for parser development
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-reports-${{ github.sha }}
+          path: jest-example/reports/
+          retention-days: 30

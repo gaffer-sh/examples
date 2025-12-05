@@ -56,19 +56,19 @@ jobs:
           test_suite: pytest-html
 
       # Alternative: Upload via curl (for documentation/reference)
-      - name: Upload via curl (example)
-        if: always() && github.actor != 'dependabot[bot]'
-        continue-on-error: true
-        env:
-          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
-        run: |
-          curl -X POST https://app.gaffer.sh/api/upload \
-            -H "X-API-Key: $GAFFER_API_KEY" \
-            -F "files=@reports/pytest-report.html" \
-            -F "commit_sha=${{ github.sha }}" \
-            -F "branch=${{ github.ref_name }}" \
-            -F "test_framework=pytest" \
-            -F "test_suite=curl-example"
+      # - name: Upload via curl (example)
+      #   if: always() && github.actor != 'dependabot[bot]'
+      #   continue-on-error: true
+      #   env:
+      #     GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+      #   run: |
+      #     curl -X POST https://app.gaffer.sh/api/upload \
+      #       -H "X-API-Key: $GAFFER_API_KEY" \
+      #       -F "files=@reports/pytest-report.html" \
+      #       -F "commit_sha=${{ github.sha }}" \
+      #       -F "branch=${{ github.ref_name }}" \
+      #       -F "test_framework=pytest" \
+      #       -F "test_suite=curl-example"
 
       # Store artifacts for parser development
       - name: Upload test artifacts

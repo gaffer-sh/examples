@@ -3,14 +3,8 @@ name: pytest Tests
 on:
   push:
     branches: [main]
-    paths:
-      - "pytest-example/**"
-      - ".github/workflows/pytest.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "pytest-example/**"
-      - ".github/workflows/pytest.yml"
   workflow_dispatch:
 
 defaults:

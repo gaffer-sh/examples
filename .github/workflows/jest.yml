@@ -3,14 +3,8 @@ name: Jest Tests
 on:
   push:
     branches: [main]
-    paths:
-      - "jest-example/**"
-      - ".github/workflows/jest.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "jest-example/**"
-      - ".github/workflows/jest.yml"
   workflow_dispatch:
 
 defaults:

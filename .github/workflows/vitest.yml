@@ -3,14 +3,8 @@ name: Vitest Tests
 on:
   push:
     branches: [main]
-    paths:
-      - "vitest-example/**"
-      - ".github/workflows/vitest.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "vitest-example/**"
-      - ".github/workflows/vitest.yml"
   workflow_dispatch:
 
 defaults:

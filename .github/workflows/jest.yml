@@ -29,11 +29,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
-          cache-dependency-path: jest-example/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Create reports directory
         run: mkdir -p reports
@@ -48,7 +46,7 @@ jobs:
 
       # Upload via GitHub Action (recommended)
       - name: Upload Jest JSON to Gaffer
-        if: always() && env.GAFFER_API_KEY != ''
+        if: always()
         uses: gaffer-sh/gaffer-uploader@v0.3.0
         with:
           gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
@@ -57,11 +55,9 @@ jobs:
           branch: ${{ github.head_ref || github.ref_name }}
           test_framework: jest
           test_suite: jest-json
-        env:
-          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
 
       - name: Upload Jest HTML to Gaffer
-        if: always() && env.GAFFER_API_KEY != ''
+        if: always()
         uses: gaffer-sh/gaffer-uploader@v0.3.0
         with:
           gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
@@ -70,12 +66,10 @@ jobs:
           branch: ${{ github.head_ref || github.ref_name }}
           test_framework: jest
           test_suite: jest-html
-        env:
-          GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
 
       # Alternative: Upload via curl (for documentation/reference)
       - name: Upload via curl (example)
-        if: always() && env.GAFFER_API_KEY != ''
+        if: always()
         continue-on-error: true
         env:
           GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}

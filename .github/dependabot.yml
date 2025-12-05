@@ -1,0 +1,24 @@
+version: 2
+updates:
+  # JavaScript/npm (Jest + Vitest examples)
+  - package-ecosystem: "npm"
+    directory: "/jest-example"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "npm"
+    directory: "/vitest-example"
+    schedule:
+      interval: "weekly"
+
+  # Python/pip (pytest example)
+  - package-ecosystem: "pip"
+    directory: "/pytest-example"
+    schedule:
+      interval: "weekly"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

@@ -45,8 +45,9 @@ jobs:
         continue-on-error: true
 
       # Upload via GitHub Action (recommended)
+      # Skip on Dependabot PRs (no access to secrets)
       - name: Upload Jest JSON to Gaffer
-        if: always()
+        if: always() && github.actor != 'dependabot[bot]'
         uses: gaffer-sh/gaffer-uploader@v0.3.0
         with:
           gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
@@ -57,7 +58,7 @@ jobs:
           test_suite: jest-json
 
       - name: Upload Jest HTML to Gaffer
-        if: always()
+        if: always() && github.actor != 'dependabot[bot]'
         uses: gaffer-sh/gaffer-uploader@v0.3.0
         with:
           gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
@@ -69,7 +70,7 @@ jobs:
 
       # Alternative: Upload via curl (for documentation/reference)
       - name: Upload via curl (example)
-        if: always()
+        if: always() && github.actor != 'dependabot[bot]'
         continue-on-error: true
         env:
           GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}

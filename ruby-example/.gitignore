@@ -1,0 +1,27 @@
+# Ignore bundler config
+/vendor/bundle
+.bundle/
+
+# Ignore log and temporary files
+log/*.log
+tmp/
+
+# Ignore database files
+*.sqlite3
+/db/*.sqlite3-journal
+
+# Ignore editor/IDE specific files
+.idea/
+.vscode/
+
+# Ignore sensitive configuration
+config/secrets.yml
+.env
+
+# Ignore test coverage reports
+/coverage/
+
+# Ignore generated documentation
+/doc/
+
+.ruby-lsp/

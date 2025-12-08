@@ -1,0 +1,54 @@
+name: Ruby RSpec Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ruby-example
+
+jobs:
+  test:
+    name: Ruby HTML Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3" # Specify your Ruby version here (e.g., '3.1', '3.2', '3.3')
+          bundler-cache: true # Caches installed gems for faster builds
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Run RSpec tests
+        run: bundle exec rspec --format html --out report.html
+
+      # Upload via GitHub Action (recommended)
+      # Skip on Dependabot PRs (no access to secrets)
+      - name: Upload Ruby HTML to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: ruby-example/report.html
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: rspec
+          test_suite: rspec
+
+      # Store artifacts for parser development
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruby-report-${{ github.sha }}
+          path: ruby-example/report.html
+          retention-days: 30

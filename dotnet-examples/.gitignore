@@ -1,0 +1,17 @@
+# Build outputs
+bin/
+obj/
+
+# Reports (generated)
+reports/
+*.trx
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db

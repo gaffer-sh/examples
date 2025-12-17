@@ -11,6 +11,7 @@ Parser Check: December 4 2025 - 20:41
 | Jest | JSON, HTML | [`jest-example/`](./jest-example/) |
 | pytest | HTML | [`pytest-example/`](./pytest-example/) |
 | Vitest | JSON | [`vitest-example/`](./vitest-example/) |
+| .NET (xUnit, NUnit, MSTest) | TRX | [`dotnet-examples/`](./dotnet-examples/) |
 
 ## Quick Start
 
@@ -18,6 +19,7 @@ Parser Check: December 4 2025 - 20:41
 
 - Node.js 22+ (Jest, Vitest)
 - Python 3.9+ (pytest)
+- Docker or .NET 8.0 SDK (xUnit, NUnit, MSTest)
 - [Gaffer API key](https://app.gaffer.sh)
 
 ### Running Examples Locally
@@ -44,6 +46,19 @@ pytest --html=reports/pytest-report.html --self-contained-html
 cd vitest-example
 npm install
 npm run test:json  # Generates JSON report
+```
+
+#### .NET (via Docker)
+
+```bash
+cd dotnet-examples
+mkdir -p reports
+docker run --rm -v "$(pwd):/app" -w /app mcr.microsoft.com/dotnet/sdk:8.0 sh -c "
+  dotnet restore && dotnet build && \
+  dotnet test tests/Calculator.XUnit.Tests --logger 'trx;LogFileName=xunit-results.trx' --results-directory ./reports && \
+  dotnet test tests/Calculator.NUnit.Tests --logger 'trx;LogFileName=nunit-results.trx' --results-directory ./reports && \
+  dotnet test tests/Calculator.MSTest.Tests --logger 'trx;LogFileName=mstest-results.trx' --results-directory ./reports
+"
 ```
 
 ## Uploading to Gaffer
@@ -90,6 +105,9 @@ See the workflows in [`.github/workflows/`](./.github/workflows/).
 | Jest | HTML | `reports/jest-report.html` | `jest-html` |
 | pytest | HTML | `reports/pytest-report.html` | `pytest-html` |
 | Vitest | JSON | `reports/vitest-results.json` | `vitest-json` |
+| xUnit | TRX | `reports/xunit-results.trx` | `trx` |
+| NUnit | TRX | `reports/nunit-results.trx` | `trx` |
+| MSTest | TRX | `reports/mstest-results.trx` | `trx` |
 
 ## Accessing Artifacts
 

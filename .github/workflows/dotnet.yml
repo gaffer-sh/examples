@@ -1,0 +1,91 @@
+name: .NET Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: dotnet-examples
+
+jobs:
+  test:
+    name: .NET TRX Reports
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run xUnit tests
+        run: dotnet test tests/Calculator.XUnit.Tests --no-build --logger "trx;LogFileName=xunit-results.trx" --results-directory ./reports
+        continue-on-error: true
+
+      - name: Run NUnit tests
+        run: dotnet test tests/Calculator.NUnit.Tests --no-build --logger "trx;LogFileName=nunit-results.trx" --results-directory ./reports
+        continue-on-error: true
+
+      - name: Run MSTest tests
+        run: dotnet test tests/Calculator.MSTest.Tests --no-build --logger "trx;LogFileName=mstest-results.trx" --results-directory ./reports
+        continue-on-error: true
+
+      # Upload xUnit TRX to Gaffer
+      - name: Upload xUnit TRX to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: dotnet-examples/reports/xunit-results.trx
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.ref_name }}
+          test_framework: dotnet
+          test_suite: xunit
+
+      # Upload NUnit TRX to Gaffer
+      - name: Upload NUnit TRX to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: dotnet-examples/reports/nunit-results.trx
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.ref_name }}
+          test_framework: dotnet
+          test_suite: nunit
+
+      # Upload MSTest TRX to Gaffer
+      - name: Upload MSTest TRX to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        with:
+          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          report_path: dotnet-examples/reports/mstest-results.trx
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.ref_name }}
+          test_framework: dotnet
+          test_suite: mstest
+
+      # Store artifacts for parser development
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-reports-${{ github.sha }}
+          path: dotnet-examples/reports/
+          retention-days: 30

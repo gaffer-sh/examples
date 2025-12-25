@@ -33,7 +33,7 @@ pytest --html=reports/pytest-report.html --self-contained-html
 
 ```bash
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/pytest-report.html"
 ```
 

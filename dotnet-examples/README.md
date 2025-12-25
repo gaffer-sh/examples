@@ -107,17 +107,17 @@ Each test project includes various test types to demonstrate TRX output:
 ```bash
 # Upload xUnit TRX
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/xunit-results.trx"
 
 # Upload NUnit TRX
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/nunit-results.trx"
 
 # Upload MSTest TRX
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/mstest-results.trx"
 ```
 

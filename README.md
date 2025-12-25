@@ -20,7 +20,7 @@ Parser Check: December 17 2025 - 8:31
 - Node.js 22+ (Jest, Vitest)
 - Python 3.9+ (pytest)
 - Docker or .NET 8.0 SDK (xUnit, NUnit, MSTest)
-- [Gaffer API key](https://app.gaffer.sh)
+- [Gaffer Upload Token](https://app.gaffer.sh)
 
 ### Running Examples Locally
 

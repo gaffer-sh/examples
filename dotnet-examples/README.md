@@ -11,7 +11,7 @@ This directory contains three test projects using different .NET test frameworks
 
 - [Docker](https://www.docker.com/get-started) (recommended)
 - OR [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Gaffer API key](https://app.gaffer.sh)
+- [Gaffer Upload Token](https://app.gaffer.sh)
 
 ## Running Tests with Docker (Recommended)
 

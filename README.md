@@ -67,7 +67,7 @@ docker run --rm -v "$(pwd):/app" -w /app mcr.microsoft.com/dotnet/sdk:8.0 sh -c 
 
 ```yaml
 - name: Upload to Gaffer
-  uses: gaffer-sh/gaffer-uploader@v0.3.0
+  uses: gaffer-sh/gaffer-uploader@v0.4.0
   with:
     gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
     report_path: reports/test-report.json

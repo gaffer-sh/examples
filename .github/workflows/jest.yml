@@ -42,7 +42,7 @@ jobs:
       # Skip on Dependabot PRs (no access to secrets)
       - name: Upload Jest JSON to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
           gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: jest-example/reports/jest-results.json
@@ -53,7 +53,7 @@ jobs:
 
       - name: Upload Jest HTML to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
           gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: jest-example/reports/jest-report.html

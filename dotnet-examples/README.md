@@ -11,7 +11,7 @@ This directory contains three test projects using different .NET test frameworks
 
 - [Docker](https://www.docker.com/get-started) (recommended)
 - OR [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Gaffer API key](https://app.gaffer.sh)
+- [Gaffer Upload Token](https://app.gaffer.sh)
 
 ## Running Tests with Docker (Recommended)
 
@@ -107,17 +107,17 @@ Each test project includes various test types to demonstrate TRX output:
 ```bash
 # Upload xUnit TRX
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/xunit-results.trx"
 
 # Upload NUnit TRX
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/nunit-results.trx"
 
 # Upload MSTest TRX
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/mstest-results.trx"
 ```
 

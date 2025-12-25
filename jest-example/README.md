@@ -36,12 +36,12 @@ npm run test:all
 ```bash
 # Upload JSON report
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/jest-results.json"
 
 # Upload HTML report
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/jest-report.html"
 ```
 

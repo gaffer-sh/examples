@@ -48,9 +48,9 @@ jobs:
       # Upload xUnit TRX to Gaffer
       - name: Upload xUnit TRX to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
-          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: dotnet-examples/reports/xunit-results.trx
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
           branch: ${{ github.ref_name }}
@@ -60,9 +60,9 @@ jobs:
       # Upload NUnit TRX to Gaffer
       - name: Upload NUnit TRX to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
-          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: dotnet-examples/reports/nunit-results.trx
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
           branch: ${{ github.ref_name }}
@@ -72,9 +72,9 @@ jobs:
       # Upload MSTest TRX to Gaffer
       - name: Upload MSTest TRX to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
-          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: dotnet-examples/reports/mstest-results.trx
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
           branch: ${{ github.ref_name }}

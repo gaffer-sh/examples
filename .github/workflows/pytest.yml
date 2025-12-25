@@ -40,9 +40,9 @@ jobs:
       # Skip on Dependabot PRs (no access to secrets)
       - name: Upload pytest HTML to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
-          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: pytest-example/reports/pytest-report.html
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
           branch: ${{ github.head_ref || github.ref_name }}
@@ -54,10 +54,10 @@ jobs:
       #   if: always() && github.actor != 'dependabot[bot]'
       #   continue-on-error: true
       #   env:
-      #     GAFFER_API_KEY: ${{ secrets.GAFFER_API_KEY }}
+      #     GAFFER_UPLOAD_TOKEN: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
       #   run: |
       #     curl -X POST https://app.gaffer.sh/api/upload \
-      #       -H "X-API-Key: $GAFFER_API_KEY" \
+      #       -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
       #       -F "files=@reports/pytest-report.html" \
       #       -F "commit_sha=${{ github.sha }}" \
       #       -F "branch=${{ github.ref_name }}" \

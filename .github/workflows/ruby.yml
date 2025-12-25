@@ -35,9 +35,9 @@ jobs:
       # Skip on Dependabot PRs (no access to secrets)
       - name: Upload Ruby HTML to Gaffer
         if: always() && github.actor != 'dependabot[bot]'
-        uses: gaffer-sh/gaffer-uploader@v0.3.0
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
         with:
-          gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: ruby-example/report.html
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
           branch: ${{ github.head_ref || github.ref_name }}

@@ -2,7 +2,7 @@
 
 Example test projects demonstrating [Gaffer](https://gaffer.sh) integration for various test frameworks.
 
-Parser Check: December 17 2025 - 8:31
+Parser Check: December 25 2025 - 1:10PM - Merry Christmas
 
 ## Examples
 
@@ -20,7 +20,7 @@ Parser Check: December 17 2025 - 8:31
 - Node.js 22+ (Jest, Vitest)
 - Python 3.9+ (pytest)
 - Docker or .NET 8.0 SDK (xUnit, NUnit, MSTest)
-- [Gaffer API key](https://app.gaffer.sh)
+- [Gaffer Upload Token](https://app.gaffer.sh)
 
 ### Running Examples Locally
 
@@ -67,9 +67,9 @@ docker run --rm -v "$(pwd):/app" -w /app mcr.microsoft.com/dotnet/sdk:8.0 sh -c 
 
 ```yaml
 - name: Upload to Gaffer
-  uses: gaffer-sh/gaffer-uploader@v0.3.0
+  uses: gaffer-sh/gaffer-uploader@v0.4.0
   with:
-    gaffer_api_key: ${{ secrets.GAFFER_API_KEY }}
+    gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
     report_path: reports/test-report.json
     commit_sha: ${{ github.sha }}
     branch: ${{ github.ref_name }}
@@ -80,7 +80,7 @@ docker run --rm -v "$(pwd):/app" -w /app mcr.microsoft.com/dotnet/sdk:8.0 sh -c 
 
 ```bash
 curl -X POST https://app.gaffer.sh/api/upload \
-  -H "X-API-Key: $GAFFER_API_KEY" \
+  -H "X-API-Key: $GAFFER_UPLOAD_TOKEN" \
   -F "files=@reports/test-report.json" \
   -F "commit_sha=$COMMIT_SHA" \
   -F "branch=$BRANCH"
@@ -128,7 +128,7 @@ gh run download <run-id> -n jest-reports-<sha>
 To use these examples with your own Gaffer project:
 
 1. Fork or clone this repository
-2. Add `GAFFER_API_KEY` to your repository secrets
+2. Add `GAFFER_UPLOAD_TOKEN` to your repository secrets
 3. Push to trigger the workflows
 
 ## License

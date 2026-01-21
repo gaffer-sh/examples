@@ -1,6 +1,8 @@
 name: .NET Tests
 
 on:
+  schedule:
+    - cron: "0 6 * * *" # Run daily at 6:00 AM UTC
   push:
     branches: [main]
   pull_request:
@@ -53,7 +55,7 @@ jobs:
           gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: dotnet-examples/reports/xunit-results.trx
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          branch: ${{ github.ref_name }}
+          branch: ${{ github.head_ref || github.ref_name }}
           test_framework: dotnet
           test_suite: xunit
 
@@ -65,7 +67,7 @@ jobs:
           gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: dotnet-examples/reports/nunit-results.trx
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          branch: ${{ github.ref_name }}
+          branch: ${{ github.head_ref || github.ref_name }}
           test_framework: dotnet
           test_suite: nunit
 
@@ -77,7 +79,7 @@ jobs:
           gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
           report_path: dotnet-examples/reports/mstest-results.trx
           commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          branch: ${{ github.ref_name }}
+          branch: ${{ github.head_ref || github.ref_name }}
           test_framework: dotnet
           test_suite: mstest
 

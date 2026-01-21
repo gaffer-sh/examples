@@ -1,5 +1,9 @@
 # Gaffer Examples
 
+[![Tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fapp.gaffer.sh%2Fapi%2Fbadges%2F2f40f258-daad-4e82-89f0-8c673237594d%2Fhealth.json&style=flat)](https://app.gaffer.sh/projects/2f40f258-daad-4e82-89f0-8c673237594d)
+[![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fapp.gaffer.sh%2Fapi%2Fbadges%2F2f40f258-daad-4e82-89f0-8c673237594d%2Fcoverage.json&style=flat)](https://app.gaffer.sh/projects/2f40f258-daad-4e82-89f0-8c673237594d)
+[![Flaky](https://img.shields.io/endpoint?url=https%3A%2F%2Fapp.gaffer.sh%2Fapi%2Fbadges%2F2f40f258-daad-4e82-89f0-8c673237594d%2Fflaky.json&style=flat)](https://app.gaffer.sh/projects/2f40f258-daad-4e82-89f0-8c673237594d)
+
 Example test projects demonstrating [Gaffer](https://gaffer.sh) integration for various test frameworks.
 
 Parser Check: December 25 2025 - 1:10PM - Merry Christmas

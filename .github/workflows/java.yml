@@ -1,0 +1,66 @@
+name: Java Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: java-example
+
+jobs:
+  test:
+    name: JUnit 5 + JaCoCo Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Run tests with coverage
+        run: mvn clean verify -Dmaven.test.failure.ignore=true
+
+      # Upload JUnit test results to Gaffer
+      # Skip on Dependabot PRs (no access to secrets)
+      - name: Upload JUnit results to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
+        with:
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
+          report_path: java-example/target/surefire-reports/
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: junit
+          test_suite: junit-results
+
+      # Upload JaCoCo coverage to Gaffer
+      - name: Upload JaCoCo coverage to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
+        with:
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
+          report_path: java-example/target/site/jacoco/jacoco.xml
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: junit
+          test_suite: jacoco-coverage
+
+      # Store artifacts for parser development
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-reports-${{ github.sha }}
+          path: |
+            java-example/target/surefire-reports/
+            java-example/target/site/jacoco/
+          retention-days: 7

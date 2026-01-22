@@ -34,8 +34,14 @@ jobs:
       - name: Create reports directory
         run: mkdir -p reports
 
-      - name: Run tests with HTML output
-        run: pytest --html=reports/pytest-report.html --self-contained-html
+      - name: Run tests with HTML output and coverage
+        run: |
+          pytest \
+            --html=reports/pytest-report.html \
+            --self-contained-html \
+            --cov=src \
+            --cov-report=xml:reports/coverage.xml \
+            --cov-report=html:reports/htmlcov
         continue-on-error: true
 
       # Upload via GitHub Action (recommended)
@@ -50,6 +56,18 @@ jobs:
           branch: ${{ github.head_ref || github.ref_name }}
           test_framework: pytest
           test_suite: pytest-html
+
+      # Upload Cobertura coverage report
+      - name: Upload coverage to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
+        with:
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
+          report_path: pytest-example/reports/coverage.xml
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: pytest
+          test_suite: pytest-coverage
 
       # Alternative: Upload via curl (for documentation/reference)
       # - name: Upload via curl (example)
@@ -73,4 +91,4 @@ jobs:
         with:
           name: pytest-reports-${{ github.sha }}
           path: pytest-example/reports/
-          retention-days: 30
+          retention-days: 7

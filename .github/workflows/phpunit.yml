@@ -1,0 +1,86 @@
+name: PHPUnit Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: php-example
+
+jobs:
+  test:
+    name: PHPUnit + Clover Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: pcov
+          tools: composer:v2
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('php-example/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run tests with coverage
+        run: |
+          vendor/bin/phpunit \
+            --coverage-clover reports/clover.xml \
+            --coverage-html reports/htmlcov \
+            --log-junit reports/phpunit-results.xml
+        continue-on-error: true
+
+      # Upload PHPUnit test results to Gaffer
+      # Skip on Dependabot PRs (no access to secrets)
+      - name: Upload PHPUnit results to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
+        with:
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
+          report_path: php-example/reports/phpunit-results.xml
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: phpunit
+          test_suite: phpunit-results
+
+      # Upload Clover coverage to Gaffer
+      - name: Upload Clover coverage to Gaffer
+        if: always() && github.actor != 'dependabot[bot]'
+        uses: gaffer-sh/gaffer-uploader@v0.4.0
+        with:
+          gaffer_upload_token: ${{ secrets.GAFFER_UPLOAD_TOKEN }}
+          report_path: php-example/reports/clover.xml
+          commit_sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          test_framework: phpunit
+          test_suite: phpunit-coverage
+
+      # Store artifacts for parser development
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-reports-${{ github.sha }}
+          path: php-example/reports/
+          retention-days: 7

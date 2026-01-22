@@ -27,8 +27,7 @@ jobs:
           cache: "maven"
 
       - name: Run tests with coverage
-        run: mvn clean verify
-        continue-on-error: true
+        run: mvn clean verify -Dmaven.test.failure.ignore=true
 
       # Upload JUnit test results to Gaffer
       # Skip on Dependabot PRs (no access to secrets)
